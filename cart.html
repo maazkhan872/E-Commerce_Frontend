@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Your Cart</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+<h2>Your Shopping Cart</h2>
+
+<a href="index.html">
+<button>Back to Shop</button>
+</a>
+
+</div>
+
+<div id="cart-container"></div>
+
+<h2 id="total"></h2>
+
+<button onclick="checkout()" class="checkout">
+Checkout
+</button>
+
+<script>
+
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+const container = document.getElementById("cart-container");
+
+const totalDiv = document.getElementById("total");
+
+function displayCart(){
+
+container.innerHTML="";
+
+let total=0;
+
+cart.forEach((item,index)=>{
+
+
+// quantity set if missing
+
+if(!item.quantity){
+
+item.quantity=1;
+
+}
+
+// convert price to number
+
+let price = Number(item.price);
+
+
+total += price * item.quantity;
+
+container.innerHTML += `
+
+<div class="cart-item">
+
+<img src="${item.image}" width="80">
+
+<h4>${item.title}</h4>
+
+<p>$${price}</p>
+
+<button onclick="decrease(${index})">-</button>
+
+<span>${item.quantity}</span>
+
+<button onclick="increase(${index})">+</button>
+
+<button onclick="removeItem(${index})">
+Remove
+</button>
+
+</div>
+
+`;
+
+});
+
+
+
+totalDiv.innerHTML="Total: $" + total.toFixed(2);
+
+localStorage.setItem("cart",JSON.stringify(cart));
+
+}
+
+function increase(index){
+
+cart[index].quantity++;
+
+displayCart();
+
+}
+
+function decrease(index){
+
+if(cart[index].quantity>1){
+
+cart[index].quantity--;
+
+}
+
+displayCart();
+
+}
+
+function removeItem(index){
+
+cart.splice(index,1);
+
+displayCart();
+
+}
+
+function checkout(){
+
+alert("Order Successful!");
+
+localStorage.removeItem("cart");
+
+window.location.href="success.html";
+
+}
+
+displayCart();
+
+</script>
+
+</body>
+</html>
